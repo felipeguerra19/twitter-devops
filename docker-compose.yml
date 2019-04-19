@@ -1,0 +1,32 @@
+  version: "2.1"
+  services:
+    database:
+        image: amazon/dynamodb-local
+        ports:
+          - 8000:8000
+        # networks:
+        #   - twitter
+        #       # ipv4_address: 10.0.0.10
+
+    consumer:
+        image: felipeguerraoliveira/twitter-consumer:1.0
+        command: bash -c "sh start-up.sh"
+        ports:
+          - 3000:3000
+        environment:
+          - DYNAMODB_ENDPOINT=${DYNAMODB_ENDPOINT}
+        links:
+          - database
+        depends_on:
+          - database
+    #     networks:
+    #       - twitter
+    #           # ipv4_address: 10.0.0.20
+    #
+    # networks:
+    #   twitter:
+    #     ipam:
+    #       driver: bridge
+    #       # config:
+    #       #   - subnet: "10.0.0.0/16"
+    #       #     gateway: "10.0.0.1"
